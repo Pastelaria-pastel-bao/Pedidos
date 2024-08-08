@@ -21,7 +21,7 @@ import java.util.Optional;
 public class PedidoService {
 
     private final PedidosRepository pedidosRepository;
-
+    @Transactional
     public Pedidos criarPedido(Pedidos pedido) {
         try {
             return pedidosRepository.save(pedido);
@@ -30,7 +30,7 @@ public class PedidoService {
             throw new DatabaseException("Erro no banco de dados");
         }
     }
-
+    @Transactional
     public Optional<Pedidos> buscarPedidoPorId(Long id) {
         try {
             if (id <= 0) {
@@ -43,28 +43,36 @@ public class PedidoService {
         }
     }
 
+    @Transactional
     public Pedidos atualizarPedido(Long id, Pedidos pedidoAtualizado) {
-        try {
-            Pedidos pedidoExistente = buscarPedidoPorId(id)
-                    .orElseThrow(() -> new PedidoNaoEncontradoException("Pedido não encontrado com ID: " + id));
+        Pedidos pedidoExistente = buscarPedidoPorId(id)
+                .orElseThrow(() -> new PedidoNaoEncontradoException("Pedido não encontrado com ID: " + id));
 
-            if (pedidoAtualizado.getEndereco() != null) {
-                pedidoExistente.setEndereco(pedidoAtualizado.getEndereco());
-            }
-            if (pedidoAtualizado.getItensPedido() != null) {
-                pedidoExistente.setItensPedido(pedidoAtualizado.getItensPedido());
-            }
-            if (pedidoAtualizado.getFormaPagamento() != null) {
-                pedidoExistente.setFormaPagamento(pedidoAtualizado.getFormaPagamento());
-            }
-
-            return pedidosRepository.save(pedidoExistente);
-        } catch (Exception ex) {
-            log.error("Erro inesperado ao atualizar pedido com ID: {}", id, ex);
-            throw new DatabaseException("Erro no banco de dados");
+        // Atualiza os campos do pedido existente com os dados recebidos
+        if (pedidoAtualizado.getEndereco() != null) {
+            pedidoExistente.setEndereco(pedidoAtualizado.getEndereco());
         }
+
+        // Atualiza os itens do pedido, se presentes
+        if (pedidoAtualizado.getItensPedido() != null) {
+            pedidoExistente.getItensPedido().clear();
+            pedidoExistente.getItensPedido().addAll(pedidoAtualizado.getItensPedido());
+        }
+
+        if (pedidoAtualizado.getFormaPagamento() != null) {
+            pedidoExistente.setFormaPagamento(pedidoAtualizado.getFormaPagamento());
+        }
+
+        // Salva e força a sincronização com o banco de dados
+        Pedidos pedidoSalvo = pedidosRepository.save(pedidoExistente);
+        pedidosRepository.flush(); // Força a sincronização com o banco de dados
+
+        return pedidoSalvo;
     }
 
+
+
+    @Transactional
     public Pedidos atualizarSituacao(Long id, Pedidos.Situacao pedidoAtualizado) {
         try {
             Pedidos pedidoExistente = buscarPedidoPorId(id)
@@ -84,7 +92,7 @@ public class PedidoService {
         }
     }
 
-
+    @Transactional
     public void deletarPedido(Long id) {
         try {
             if (id <= 0) {

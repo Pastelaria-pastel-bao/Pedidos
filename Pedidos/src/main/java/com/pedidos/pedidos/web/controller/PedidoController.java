@@ -3,6 +3,10 @@ package com.pedidos.pedidos.web.controller;
 import com.pedidos.pedidos.entity.Pedidos;
 import com.pedidos.pedidos.service.PedidoService;
 import com.pedidos.pedidos.exeptions.ResourceNotFoundException;
+import com.pedidos.pedidos.web.dto.PedidoAtualizacaoDTO;
+import com.pedidos.pedidos.web.dto.PedidoCriacaoDTO;
+import com.pedidos.pedidos.web.dto.PedidoDetalhadoDTO;
+import com.pedidos.pedidos.web.models.PedidoMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,28 +27,34 @@ public class PedidoController {
     private final PedidoService pedidoService;
 
     @PostMapping
-    public ResponseEntity<Pedidos> criarPedido(@Valid @RequestBody Pedidos pedido) {
+    public ResponseEntity<PedidoDetalhadoDTO> criarPedido(@Valid @RequestBody PedidoCriacaoDTO pedidoCriacaoDTO) {
+        Pedidos pedido = PedidoMapper.paraPedido(pedidoCriacaoDTO);
         Pedidos novoPedido = pedidoService.criarPedido(pedido);
-        return ResponseEntity.status(HttpStatus.CREATED).body(novoPedido);
+        PedidoDetalhadoDTO pedidoDetalhadoDTO = PedidoMapper.paraDetalhadoDTO(novoPedido);
+        return ResponseEntity.status(HttpStatus.CREATED).body(pedidoDetalhadoDTO);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Pedidos> buscarPedidoPorId(@PathVariable Long id) {
+    public ResponseEntity<PedidoDetalhadoDTO> buscarPedidoPorId(@PathVariable Long id) {
         Pedidos pedido = pedidoService.buscarPedidoPorId(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Pedido não encontrado com ID: " + id));
-        return ResponseEntity.ok(pedido);
+        PedidoDetalhadoDTO pedidoDetalhadoDTO = PedidoMapper.paraDetalhadoDTO(pedido);
+        return ResponseEntity.ok(pedidoDetalhadoDTO);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Pedidos> atualizarPedido(@PathVariable Long id, @RequestBody Pedidos pedidoAtualizado) {
+    public ResponseEntity<PedidoDetalhadoDTO> atualizarPedido(@PathVariable Long id, @RequestBody PedidoAtualizacaoDTO pedidoAtualizadoDTO) {
+        Pedidos pedidoAtualizado = PedidoMapper.paraPedido(pedidoAtualizadoDTO);
         Pedidos pedido = pedidoService.atualizarPedido(id, pedidoAtualizado);
-        return ResponseEntity.ok(pedido);
+        PedidoDetalhadoDTO pedidoDetalhadoDTO = PedidoMapper.paraDetalhadoDTO(pedido);
+        return ResponseEntity.ok(pedidoDetalhadoDTO);
     }
 
     @PatchMapping("/situacao/{id}")
-    public ResponseEntity<Pedidos> situacao(@PathVariable Long id, @RequestBody Pedidos.Situacao situacaoAtual) {
+    public ResponseEntity<PedidoDetalhadoDTO> atualizarSituacao(@PathVariable Long id, @RequestBody Pedidos.Situacao situacaoAtual) {
         Pedidos pedido = pedidoService.atualizarSituacao(id, situacaoAtual);
-        return ResponseEntity.ok(pedido);
+        PedidoDetalhadoDTO pedidoDetalhadoDTO = PedidoMapper.paraDetalhadoDTO(pedido);
+        return ResponseEntity.ok(pedidoDetalhadoDTO);
     }
 
     @DeleteMapping("/{id}")
@@ -54,8 +64,11 @@ public class PedidoController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Pedidos>> listarPedidos() {
+    public ResponseEntity<List<PedidoDetalhadoDTO>> listarPedidos() {
         List<Pedidos> pedidos = pedidoService.listarPedidos();
-        return ResponseEntity.ok(pedidos);
+        List<PedidoDetalhadoDTO> pedidosDTO = pedidos.stream()
+                .map(PedidoMapper::paraDetalhadoDTO)
+                .toList();
+        return ResponseEntity.ok(pedidosDTO);
     }
 }

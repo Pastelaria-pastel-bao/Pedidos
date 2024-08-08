@@ -23,12 +23,18 @@ public class Pedidos {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(nullable = false)
     private Long idUsuario;
 
     @Column(nullable = false)
     @NotNull
     private String endereco;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private FormaPagamento formaPagamento;
+
+    //--------------------------------------------
 
     @Column
     private LocalDateTime horaPagamento;
@@ -36,7 +42,15 @@ public class Pedidos {
     @Column
     private LocalDateTime horaEntrega;
 
-    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
+    @Column(updatable = false)
+    private LocalDateTime dataCriacao;
+
+    @Column
+    private LocalDateTime dataAtualizacao;
+
+    //--------------------------------------------
+
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<ItemPedido> itensPedido = new ArrayList<>();
 
@@ -44,15 +58,6 @@ public class Pedidos {
     @Enumerated(EnumType.STRING)
     @NotNull
     private Situacao situacao = Situacao.PAGAMENTO_PENDENTE;
-
-    @Enumerated(EnumType.STRING)
-    private FormaPagamento formaPagamento;
-
-    @Column(updatable = false)
-    private LocalDateTime dataCriacao;
-
-    @Column
-    private LocalDateTime dataAtualizacao;
 
     @PrePersist
     protected void onCreate() {
