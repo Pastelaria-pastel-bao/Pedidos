@@ -1,9 +1,8 @@
 package com.pedidos.pedidos.repository;
 
 import com.pedidos.pedidos.entity.ItemPedido;
-import com.pedidos.pedidos.entity.Pedidos;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
-public interface PedidosRepository extends JpaRepository<Pedidos, Long> {
+public interface ItemPedidoRepository extends JpaRepository<ItemPedido, Long> {
 }

@@ -1,5 +1,6 @@
 package com.pedidos.pedidos.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -36,6 +37,7 @@ public class Pedidos {
     private LocalDateTime horaEntrega;
 
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<ItemPedido> itensPedido = new ArrayList<>();
 
 
