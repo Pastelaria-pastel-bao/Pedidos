@@ -63,13 +63,8 @@ public class PedidoService {
             pedidoExistente.setFormaPagamento(pedidoAtualizado.getFormaPagamento());
         }
 
-        // Salva e força a sincronização com o banco de dados
-        Pedidos pedidoSalvo = pedidosRepository.save(pedidoExistente);
-        pedidosRepository.flush(); // Força a sincronização com o banco de dados
-
-        return pedidoSalvo;
+        return pedidosRepository.save(pedidoExistente);
     }
-
 
 
     @Transactional

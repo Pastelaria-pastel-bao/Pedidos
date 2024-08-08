@@ -32,4 +32,37 @@ public class ItemPedidoService {
             throw new DatabaseException("Erro no banco de dados");
         }
     }
+
+    public ItemPedido buscarItemPedidoPorId(Long id) {
+        return itemPedidoRepository.findById(id)
+                .orElseThrow(() -> new PedidoNaoEncontradoException("ItemPedido não encontrado com ID: " + id));
+    }
+
+    public ItemPedido atualizarItemPedido(Long id, ItemPedido itemAtualizado) {
+        try {
+            ItemPedido itemExistente = buscarItemPedidoPorId(id);
+
+            if (itemAtualizado.getIdPastel() != null) {
+                itemExistente.setIdPastel(itemAtualizado.getIdPastel());
+            }
+            if (itemAtualizado.getQuantidade() > 0) {
+                itemExistente.setQuantidade(itemAtualizado.getQuantidade());
+            }
+
+            return itemPedidoRepository.save(itemExistente);
+        } catch (Exception ex) {
+            log.error("Erro inesperado ao atualizar item do pedido com ID: {}", id, ex);
+            throw new DatabaseException("Erro no banco de dados");
+        }
+    }
+
+    public void deletarItemPedido(Long id) {
+        try {
+            ItemPedido itemPedido = buscarItemPedidoPorId(id);
+            itemPedidoRepository.delete(itemPedido);
+        } catch (Exception ex) {
+            log.error("Erro inesperado ao deletar item do pedido com ID: {}", id, ex);
+            throw new DatabaseException("Erro no banco de dados");
+        }
+    }
 }
