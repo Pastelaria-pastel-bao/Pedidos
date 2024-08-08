@@ -15,7 +15,6 @@ import static org.hibernate.query.sqm.tree.SqmNode.log;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class PedidosService {
 
     private final PedidosRepository pedidosRepository;
