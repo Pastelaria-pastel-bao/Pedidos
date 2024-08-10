@@ -27,4 +27,8 @@ public class ItemPedido {
     @ManyToOne
     @JoinColumn(name = "pedido_id")
     private Pedidos pedido;
+
+    public Long getIdPastel() {
+        return idPastel;
+    }
 }

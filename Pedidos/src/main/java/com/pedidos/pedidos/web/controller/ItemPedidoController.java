@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
-@RequestMapping("/item-pedido")
+@RequestMapping("/item")
 @Validated
 @RequiredArgsConstructor
 public class ItemPedidoController {
