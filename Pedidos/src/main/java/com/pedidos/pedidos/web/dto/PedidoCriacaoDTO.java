@@ -14,4 +14,28 @@ public class PedidoCriacaoDTO {
     private String endereco;
     @NotNull
     private Pedidos.FormaPagamento formaPagamento;
+
+    public @NotNull Long getIdUsuario() {
+        return idUsuario;
+    }
+
+    public void setIdUsuario(@NotNull Long idUsuario) {
+        this.idUsuario = idUsuario;
+    }
+
+    public @NotNull String getEndereco() {
+        return endereco;
+    }
+
+    public void setEndereco(@NotNull String endereco) {
+        this.endereco = endereco;
+    }
+
+    public @NotNull Pedidos.FormaPagamento getFormaPagamento() {
+        return formaPagamento;
+    }
+
+    public void setFormaPagamento(@NotNull Pedidos.FormaPagamento formaPagamento) {
+        this.formaPagamento = formaPagamento;
+    }
 }
