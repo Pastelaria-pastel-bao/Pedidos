@@ -3,11 +3,9 @@ package com.pedidos.pedidos.feing;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-@FeignClient(name = "cadastramento", url = "${cadastramento.api.url}")
-public interface PasteisClient {
+@FeignClient(name = "cadastrousuarios", url = "${usuarios.api.url}")
+public interface UsuariosClient {
     @GetMapping("/id/{id}")
-    Pasteis getById(@PathVariable("id") Long id);
-
+    Usuarios getById(@PathVariable("id") Long id);
 
 }
-

@@ -28,8 +28,8 @@ public class ItemPedidoService {
     public ItemPedido adicionarItemPedido(Long pedidoId, ItemPedido itemPedido) {
 
         Pasteis pastel = pasteisClient.getById(itemPedido.getIdPastel());
-        if (pastel !=null) {
-            new PedidoNaoEncontradoException("Pedido não encontrado com ID: " + pedidoId);
+        if (pastel ==null) {
+            new PedidoNaoEncontradoException("Pastel não encontrado com ID: " + pedidoId);
         }
             try {
                 Pedidos pedido = pedidosRepository.findById(pedidoId)

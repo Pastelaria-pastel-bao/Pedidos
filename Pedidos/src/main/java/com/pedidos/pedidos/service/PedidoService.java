@@ -4,6 +4,9 @@ import com.pedidos.pedidos.entity.ItemPedido;
 import com.pedidos.pedidos.entity.Pedidos;
 import com.pedidos.pedidos.exeptions.DatabaseException;
 import com.pedidos.pedidos.exeptions.PedidoNaoEncontradoException;
+import com.pedidos.pedidos.feing.Pasteis;
+import com.pedidos.pedidos.feing.Usuarios;
+import com.pedidos.pedidos.feing.UsuariosClient;
 import com.pedidos.pedidos.repository.PedidosRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,8 +24,14 @@ import java.util.Optional;
 public class PedidoService {
 
     private final PedidosRepository pedidosRepository;
+    private final UsuariosClient usuariosClient;
     @Transactional
     public Pedidos criarPedido(Pedidos pedido) {
+
+        Usuarios usuarios = usuariosClient.getById(pedido.getIdUsuario());
+        if(usuarios ==null){
+            new PedidoNaoEncontradoException("Usuario não encontrado com ID: " + pedido.getIdUsuario());
+        }
         try {
             return pedidosRepository.save(pedido);
         } catch (Exception ex) {
