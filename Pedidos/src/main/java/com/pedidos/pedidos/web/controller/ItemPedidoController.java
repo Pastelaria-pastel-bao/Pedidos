@@ -2,6 +2,7 @@ package com.pedidos.pedidos.web.controller;
 
 import com.pedidos.pedidos.entity.ItemPedido;
 import com.pedidos.pedidos.service.ItemPedidoService;
+import com.pedidos.pedidos.swagger.ItemPedidoSwagger;
 import com.pedidos.pedidos.web.dto.ItemPedidoDTO;
 import com.pedidos.pedidos.web.dto.ItemPedidoAtualizacaoDTO;
 import com.pedidos.pedidos.web.models.ItemPedidoMapper;
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/item")
 @Validated
 @RequiredArgsConstructor
-public class ItemPedidoController {
+public class ItemPedidoController implements ItemPedidoSwagger{
 
     private final ItemPedidoService itemPedidoService;
 

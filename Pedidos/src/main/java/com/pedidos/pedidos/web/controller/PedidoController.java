@@ -2,6 +2,7 @@ package com.pedidos.pedidos.web.controller;
 
 import com.pedidos.pedidos.entity.Pedidos;
 import com.pedidos.pedidos.service.PedidoService;
+import com.pedidos.pedidos.swagger.PedidoSwagger;
 import com.pedidos.pedidos.exeptions.ResourceNotFoundException;
 import com.pedidos.pedidos.web.dto.PedidoAtualizacaoDTO;
 import com.pedidos.pedidos.web.dto.PedidoCriacaoDTO;
@@ -22,7 +23,7 @@ import java.util.List;
 @RequestMapping("/pedidos")
 @Validated
 @RequiredArgsConstructor
-public class PedidoController {
+public class PedidoController implements PedidoSwagger {
 
     private final PedidoService pedidoService;
 
